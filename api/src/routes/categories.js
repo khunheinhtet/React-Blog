@@ -1,9 +1,10 @@
 import express from "express";
 import Category from "../models/Category.js";
+import { checkAuth } from "../utils/auth.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", checkAuth, async (req, res) => {
   const newCat = new Category(req.body);
   try {
     const savedCat = await newCat.save();
@@ -13,7 +14,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", checkAuth, async (req, res) => {
     try {
       const cats = await Category.find();
       res.status(200).json(cats);

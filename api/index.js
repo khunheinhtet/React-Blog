@@ -9,17 +9,18 @@ import categoryRoute from "./src/routes/categories.js";
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 dotenv.config();
 
-const __dirname = path.dirname(decodeURI(new URL(import.meta.url).pathname)).replace(/^\/([A-Za-z]:\/)/, '$1');
-
+// const __dirname = path.dirname(decodeURI(new URL(import.meta.url).pathname)).replace(/^\/([A-Za-z]:\/)/, '$1');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const imagesPath = path.join(__dirname, "src", "images");
 if (!fs.existsSync(imagesPath)) {
-    fs.mkdirSync(imagesPath, { recursive: true });  // 🔥 Fix: Create directory properly
+    fs.mkdirSync(imagesPath, { recursive: true });
 }
 
 
@@ -43,14 +44,6 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
     }
-
-    fs.access(req.file.path, fs.constants.F_OK, (err) => {
-      if (err) {
-          console.error("File was not saved properly:", err);
-      } else {
-          console.log("File saved successfully:", req.file.path);
-      }
-    });
     res.status(200).json({ message: "File has been uploaded", file: req.file.filename });
 });
 

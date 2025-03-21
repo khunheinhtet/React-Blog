@@ -6,9 +6,8 @@ import "./topbar.css";
 export default function TopBar() {
   const { user, dispatch } = useContext(Context);
   const navigate = useNavigate();
-  console.log(user);
 
-  // const PF = "http://localhost:5000/images/"
+  const PF = "http://localhost:5000/images/"
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -54,7 +53,7 @@ export default function TopBar() {
     <div className="topRight">
       {user ? (
         <Link to="/settings">
-          <img className="topImg" src={user.profilePic} alt="" />
+          <img className="topImg" src={PF + user.profilePic} alt="" />
         </Link>
       ) : (
         <ul className="topList">

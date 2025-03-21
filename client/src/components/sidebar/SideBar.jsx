@@ -7,14 +7,17 @@ import { config } from "../../config/config";
 export default function SideBar() {
 
   const [cats, setCats] = useState([]);
+  const accessToken = localStorage.getItem("accessToken")
 
   useEffect(() => {
     const getCats = async () => {
-      const res = await axios.get(`${config.apiBaseUrl}/api/categories`);
+      const res = await axios.get(`${config.apiBaseUrl}/api/categories`, 
+        {headers: {Authorization: `Bearer ${accessToken}`}}
+      );
       setCats(res.data);
     };
     getCats();
-  }, []);
+  }, [accessToken]);
 
   return (
     <div className="sidebar">

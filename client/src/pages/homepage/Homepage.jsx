@@ -10,14 +10,15 @@ import { config } from "../../config/config";
 export default function Homepage() {
   const [posts, setPosts] = useState([]);
   const { search } = useLocation();
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await axios.get(`${config.apiBaseUrl}/api/posts` + search);
+      const res = await axios.get(`${config.apiBaseUrl}/api/posts` + search, {headers: {Authorization: `Bearer ${accessToken}`}});
       setPosts(res.data);
     };
     fetchPosts();
-  }, [search]);
+  }, [search, accessToken]);
 
   return (
     <>

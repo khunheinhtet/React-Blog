@@ -10,6 +10,7 @@ export default function Write() {
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState(null);
   const { user } = useContext(Context);
+  const token = localStorage.getItem("accessToken");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ export default function Write() {
       } catch (err) {}
     }
     try {
-      const res = await axios.post(`${config.apiBaseUrl}/api/posts`, newPost);
+      const res = await axios.post(`${config.apiBaseUrl}/api/posts`, newPost, {headers: {Authorization: `Bearer ${token}`}});
       window.location.replace("/post/" + res.data._id);
     } catch (err) {}
   };

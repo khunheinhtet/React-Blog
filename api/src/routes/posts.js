@@ -1,12 +1,11 @@
 import express from "express";
-import User from "../models/User.js";
 import Post from "../models/Post.js";
+import { checkAuth } from "../utils/auth.js";
 
 const router = express.Router();
 
 //CREATE POST
-router.post("/", async (req, res) => {
-  console.log(req.body);
+router.post("/", checkAuth, async (req, res) => {
   const newPost = new Post(req.body);
   try {
     const savedPost = await newPost.save();
@@ -42,12 +41,12 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE POST
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", checkAuth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (post.username === req.body.username) {
       try {
-        await post.delete();
+        await post.deleteOne();
         res.status(200).json("Post has been deleted...");
       } catch (err) {
         res.status(500).json(err);
@@ -61,7 +60,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //GET POST
-router.get("/:id", async (req, res) => {
+router.get("/:id",checkAuth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     res.status(200).json(post);
@@ -71,7 +70,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //GET ALL POSTS
-router.get("/", async (req, res) => {
+router.get("/", checkAuth,async (req, res) => {
   const username = req.query.user;
   const catName = req.query.cat;
   try {

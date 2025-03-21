@@ -18,7 +18,7 @@ router.post("/register", async (req, res) => {
 
     const user = await newUser.save();
     // Generate an access token
-    const accessToken = jwt.sign({ id: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET);
+    const accessToken = jwt.sign({ id: user._id, name: user.username, email: user.email }, process.env.JWT_SECRET);
     
     res.status(200).json({ user, accessToken });
   } catch (err) {
@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
     }
 
     const { password, ...others } = user._doc;
-    const accessToken = jwt.sign({ id: others._id, name: others.name, email: others.email }, process.env.JWT_SECRET);
+    const accessToken = jwt.sign({ id: others._id, name: others.username, email: others.email }, process.env.JWT_SECRET);
     res.status(200).json({ others, accessToken });
   } catch (err) {
     res.status(500).json(err);

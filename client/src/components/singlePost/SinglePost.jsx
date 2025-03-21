@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
+import { config } from "../../config/config";
 
 export default function SinglePost() {
 
     const location = useLocation();
-    console.log(location);
     const path = location.pathname.split("/")[2];
     const [post, setPost] = useState({});
     const PF = "http://localhost:5000/images/";
@@ -16,29 +16,34 @@ export default function SinglePost() {
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [updateMode, setUpdateMode] = useState(false);
-  
+    const accessToken = localStorage.getItem("accessToken");
+
     useEffect(() => {
       const getPost = async () => {
-        const res = await axios.get("/posts/" + path);
+        const res = await axios.get(`${config.apiBaseUrl}/api/posts/` + path,
+          {headers: {Authorization: `Bearer ${accessToken}`}}
+        );
         setPost(res.data);
         setTitle(res.data.title);
         setDesc(res.data.desc);
       };
       getPost();
-    }, [path]);
+    }, [path, accessToken]);
   
     const handleDelete = async () => {
       try {
-        await axios.delete(`/posts/${post._id}`, {
+        await axios.delete(`${config.apiBaseUrl}/api/posts/${post._id}`, {headers: {Authorization: `Bearer ${accessToken}`}},
+          {
           data: { username: user.username },
-        });
+          }
+        );
         window.location.replace("/");
       } catch (err) {}
     };
-  
     const handleUpdate = async () => {
       try {
-        await axios.put(`/posts/${post._id}`, {
+        await axios.put(`${config.apiBaseUrl}/api/posts/${post._id}`, {headers: {Authorization: `Bearer ${accessToken}`}},
+           {
           username: user.username,
           title,
           desc,

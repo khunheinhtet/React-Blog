@@ -11,8 +11,6 @@ export default function Login() {
   const passwordRef = useRef();
   const { dispatch, isFetching } = useContext(Context);
 
-
-  // console.log(config.apiBaseUrl);
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
@@ -21,7 +19,6 @@ export default function Login() {
         username: userRef.current.value,
         password: passwordRef.current.value,
       });
-      console.log(res);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.others });
       localStorage.setItem("accessToken", (res.data.accessToken));
       navigate("/");
